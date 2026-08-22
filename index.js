@@ -4,6 +4,8 @@ import dns from "node:dns";
 import dotenv from "dotenv"
 import userRouter from "./routes/userRouter.js";
 import messageRouter from "./routes/messageRouter.js"
+import cookieParser from "cookie-parser";
+
 
 
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
@@ -11,7 +13,7 @@ dns.setServers(["8.8.8.8", "8.8.4.4"]);
 dotenv.config();
 const app=express();
 app.use(express.json());
-
+app.use(cookieParser())
 
 app.use("/user",userRouter)
 app.use("/msg",messageRouter)
