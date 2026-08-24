@@ -2,6 +2,7 @@ import User from "../model/userSchema.js"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
 import authUserMiddleware from "../middleware/authUserMiddleware.js"
+import { signupSchema,loginSchema} from "../validators/userValidators.js"
 // login
 // logout
 // signup
@@ -30,14 +31,25 @@ const cookieOption={
 
 export const signup = async (req,res)=>{
     try{
-        const {name,age,email,password}=req.body
-
-        if(!name||!password ||!email|| !age){
-           return res.status(400).json({
-                message:"Some fileds are missing"
+        //Validate
+        const result=signupSchema.safeParse(req.body);
+        
+        if(!result){
+            return res.status(400).json({
+                message:result.error.issues[0].message
             })
         }
+
+        const {name,age,email,password}=result.data;
+
+
+        // if(!name||!password ||!email|| !age){
+        //    return res.status(400).json({
+        //         message:"Some fileds are missing"
+        //     })
+        // }
         //Same email wala exist nahi karta
+
         const user=await User.findOne({email});
         if(user){
             return res.status(409).json({
@@ -72,11 +84,13 @@ export const signup = async (req,res)=>{
 
 
 export const login  = async (req,res)=>{
+    const result=loginSchema.safeParse(req.body);
+    
     try{
         const {email,password}=req.body;
-        if(!password ||!email){
-           return res.status(400).json({
-                message:"Some fileds are missing"
+        if(!result){
+            return res.status(400).json({
+                message:result.error.issues[0].message
             })
         }
 
@@ -164,6 +178,7 @@ export const logout = async (req,res)=>{
         
 //     }
 // }
+
 
 
 export const profile= async(req,res)=>{
