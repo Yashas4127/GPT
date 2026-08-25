@@ -1,4 +1,4 @@
-import {z} from zod;
+import {z} from "zod";
 
 export const signupSchema=z.object({
     name:
@@ -10,9 +10,13 @@ export const signupSchema=z.object({
         z.number()
         .min(10,"Minimum age should be 10")
         .max(100,"Maximum age should be 100"),
-    email:
-        z.preprocess((value)=> typeof value== "string" ? value.trim().toLowerCase() : " ")
-        .z.email("Email must be valid"),
+    email: z.preprocess(
+    (value) =>
+        typeof value === "string"
+            ? value.trim().toLowerCase()
+            : "",
+    z.email("Email must be valid")
+),
     password:
         z.string()
         .min()

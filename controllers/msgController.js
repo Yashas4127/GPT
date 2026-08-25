@@ -1,0 +1,61 @@
+//getMessage
+//sendMessage
+import Chat from "../model/chatSchema.js";
+import Message from "../model/messageSchema.js";
+export const getMessage=async (req,res)=>{
+    try{
+        const {chatId} =req.params;
+       const chat =await Chat.findOne({
+            _id:chatId,
+            userId:req.user._id
+        });
+        if(!chat){
+         return res.status(404).json({
+            message:"Chat not found"
+         })
+        }
+        const messages = await Message.find({
+            chatId: chatId
+        }).sort({createdAt:1});
+
+        res.status(200).json({
+            messages: "Your are all messages are here",
+            msg: messages
+        });
+
+    }
+
+    
+    catch(err){
+        console.log(err);
+        res.status(500).json({
+            message:"Internal Server Erorr"
+        })
+        
+    }
+}
+
+export const sendMessage=async (req,res)=>{
+    try{
+        const {chatId} =req.params;
+        const {content} =req.body;
+        if(!content || content.trim()===""){
+            return res.status(400).json({
+                message:"Content is missing"
+            })
+        }
+       const chat =await Chat.findOne({
+            _id:chatId,
+            userId:req.user._id
+        });
+
+
+}
+    catch(err){
+        console.log(err);
+        res.status(500).json({
+            message:"Internal Server Erorr"
+        })
+        
+    }    
+}
