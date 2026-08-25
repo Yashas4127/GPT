@@ -49,6 +49,28 @@ export const sendMessage=async (req,res)=>{
             userId:req.user._id
         });
 
+        const Usermessage =  await Message.create({
+            userId: req.user._id,
+            chatId: chatId,
+            role: "user",
+            content: content,
+        });
+
+
+            // content: AI ko bhejna hai: Logic
+        const dummyReply = "Mein changs si"
+
+        const assMessage = await Message.create({
+            userId: req.user._id,
+            chatId: chatId,
+            role: "assistant",
+            content: dummyReply,
+        });
+
+        res.status(201).json({
+            messages: dummyReply
+        });
+
 
 }
     catch(err){
