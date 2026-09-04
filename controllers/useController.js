@@ -1,6 +1,8 @@
 import User from "../model/userSchema.js"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
+import Chat from "../model/chatSchema.js"
+import Message from "../model/messageSchema.js"
 import authUserMiddleware from "../middleware/authUserMiddleware.js"
 import { signupSchema,loginSchema} from "../validators/userValidators.js"
 // login
@@ -196,3 +198,35 @@ export const profile= async(req,res)=>{
         });
     }
 }
+
+export const deleteChat=async (req,res)=>{
+    try{
+        //Find all Chat id
+        //Delete all the message belong to chat id
+        // Delete all ChatId
+        //Delete user profile
+        
+        const userId=req.user._id;
+
+        const chats=await Chat.find({userId}).select("_id");
+
+        const chatIds=chats.map((chat)=>chat._id);
+
+        await Message.deleteMany
+        ({userId});
+
+        await Chat.deleteMany({userId});
+
+        await User.deleteOne({_id:userId});
+
+        res.clearCookie("token",{
+            httpOnly:true,
+            secure:false
+        })
+    }
+    catch(err){
+        res.status(500).json({
+          message:"Internal server error"  
+        })
+    }
+} 
