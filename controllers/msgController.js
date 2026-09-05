@@ -3,8 +3,10 @@
 import Chat from "../model/chatSchema.js";
 import Message from "../model/messageSchema.js";
 import mongoose from "mongoose";
+import openRouter from "../config/openRouter.js";
 export const getMessage=async (req,res)=>{
-    try{
+
+  try{
         const {chatId} =req.params;
        const chat =await Chat.findOne({
             _id:chatId,
@@ -98,7 +100,12 @@ export const sendMessage = async (req, res) => {
 
     // 5. Dummy AI reply for now
     // Later we will replace this with OpenRouter response
-    const aiReply = "AI reply will come here later.";
+    const aiReply = await openRouter.chat.send({
+      chatRequest:{
+        model,
+        messages
+      }
+    });
 
     // 6. Save assistant message
     const assistantMessage = await Message.create({
