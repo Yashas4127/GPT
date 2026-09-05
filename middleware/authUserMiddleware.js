@@ -1,28 +1,37 @@
-import jwt from "jsonwebtoken"
-import User  from "../model/userSchema.js";
-const authUserMiddleware= async(req,res,next)=>{
-    try{
-        const token =req.cookies;
-        const payload=jwt.verify(token,process.env.JWT_KEY);
+import jwt from "jsonwebtoken";
+import User from "../model/userSchema.js";
+const authUserMiddleware = async (req, res, next) => {
+    try {
+        const token = req.cookies.token;
 
-        const existingUser=await User.findById(payload._id);
+        console.log("TOKEN:", JSON.stringify(token));
 
-        if(!existingUser){
-            res.status(404).json({
-                message:"User Does Not exits"
-            })
+        if (!token) {
+            return res.status(401).json({
+                message: "You need to login first"
+            });
         }
-        req.user=existingUser
-        next();
-    }
-    catch(err){
-        console.log(err);
-        res.status(500).json({
-            message:"Internal server erorr"
-        })
-        
-    }
-    
-}
 
+        const payload = jwt.verify(token, process.env.JWT_KEY);
+
+        const existingUser = await User.findById(payload._id);
+
+        if (!existingUser) {
+            return res.status(404).json({
+                message: "User does not exist"
+            });
+        }
+
+        req.user = existingUser;
+
+        next();
+
+    } catch (err) {
+        console.log("JWT ERROR:", err.message);
+
+        return res.status(401).json({
+            message: "Invalid or expired token"
+        });
+    }
+};
 export default authUserMiddleware

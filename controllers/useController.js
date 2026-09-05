@@ -113,9 +113,18 @@ export const login  = async (req,res)=>{
                 message:"Invalid Credtials"
             })
         }
-        const token=createToken(existingUser._id,email);
+const token = jwt.sign(
+    { _id: existingUser._id },
+    process.env.JWT_KEY,
+    { expiresIn: "7d" }
+);
 
-        res.cookie("token",token,cookieOption);
+res.cookie("token", token, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000
+});
 
         res.status(200).json({
             message:"User Logged in SuccessFully",
@@ -145,47 +154,9 @@ export const logout = async (req,res)=>{
     })
 }
 
-
-
-//Any Body can view any profile
-// export const profile = async (req,res)=>{
-//     try{
-//         const email =req.body;
-
-//         if(!email){
-//             res.status(400).json({
-//                 message:"Email is missing"
-//             });
-//             const existingUser=await User.findOne({email});
-            
-//             if(!existingUser){
-//             return res.status(401).json({
-//                 message:"Invalid Credtials"
-//             })
-//         };
-
-//         res.status(200).json({
-//             name:existingUser.name,
-//             age:existingUser.age,
-//             usage:existingUser.usage
-//         });
-
-//         }
-//     }
-//     catch(err){
-//         console.log(err);
-//         res.status(500).json({
-//             message:"Internal server error"
-//         });
-        
-//     }
-// }
-
-
-
 export const profile= async(req,res)=>{
     try{
-        req.status(200).json({
+        res.status(200).json({
             name:req.user.name,
             age:req.user.age,
             usage:req.user.usage
@@ -223,6 +194,9 @@ export const deleteChat=async (req,res)=>{
             httpOnly:true,
             secure:false
         })
+        return res.status(200).json({
+    message: "User deleted successfully"
+});
     }
     catch(err){
         res.status(500).json({

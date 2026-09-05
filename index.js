@@ -23,7 +23,7 @@ const startServer=async()=>{
     try{
         await ConnectDb();
         app.listen(process.env.PORT,()=>{
-            console.log("Server listing at 3000");
+            console.log("Server listing at 5000");
         }) 
     } 
     catch(err){

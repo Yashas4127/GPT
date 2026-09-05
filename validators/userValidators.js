@@ -19,7 +19,7 @@ export const signupSchema=z.object({
 ),
     password:
         z.string()
-        .min()
+        .min(3)
         .max(30)
         .regex(/[A-Z]/,"Your password should have atleast 1 captial letter")
         .regex(/[a-z]/,"Your password should have atleast 1 small letter")
@@ -28,15 +28,19 @@ export const signupSchema=z.object({
 })
 
 
-export const loginSchema=z.object({
-    email:
-        z.preprocess((value)=> typeof value== "string" ? value.trim().toLowerCase() : " ")
-        .z.email("Email must be valid"),
-    password:
-        z.string()
-        .min()
+export const loginSchema = z.object({
+    email: z.preprocess(
+        (value) =>
+            typeof value === "string"
+                ? value.trim().toLowerCase()
+                : "",
+        z.email("Email must be valid")
+    ),
+
+    password: z.string()
+        .min(8, "Minimum password length should be 8")
         .max(30)
-        .regex(/[A-Z]/,"Your password should have atleast 1 captial letter")
-        .regex(/[a-z]/,"Your password should have atleast 1 small letter")
-        .regex(/["!@#$%^&*"]/,"Your password should have atleast 1 special letter")  
-})
+        .regex(/[A-Z]/, "Your password should have at least 1 capital letter")
+        .regex(/[a-z]/, "Your password should have at least 1 small letter")
+        .regex(/[!@#$%^&*]/, "Your password should have at least 1 special letter")
+});
