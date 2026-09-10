@@ -4,6 +4,8 @@
   "description": "This mainly a backend of ChatGpt\r it is build using first thaught principle",
   "main": "index.js",
   "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

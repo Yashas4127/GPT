@@ -5,6 +5,7 @@
 
 import Chat  from "../model/chatSchema.js"
 import Message from "../model/messageSchema.js";
+import mongoose from "mongoose";
 
 //req.user has all the user request
 export const getRecentChat =async (req,res)=>{

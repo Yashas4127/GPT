@@ -36,7 +36,7 @@ export const signup = async (req,res)=>{
         //Validate
         const result=signupSchema.safeParse(req.body);
         
-        if(!result){
+        if(!result.success){
             return res.status(400).json({
                 message:result.error.issues[0].message
             })
@@ -90,7 +90,7 @@ export const login  = async (req,res)=>{
     
     try{
         const {email,password}=req.body;
-        if(!result){
+        if(!result.success){
             return res.status(400).json({
                 message:result.error.issues[0].message
             })
