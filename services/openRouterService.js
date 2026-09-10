@@ -15,7 +15,7 @@ export const generateAIResponse = async ({ model, messages }) => {
   }
  
   // input Token == Prompt Token
-  // output Token == completeion Token
+  // output Token == completeio Token
   const promptTokens = completion.usage?.promptTokens || 0;
   const completionTokens = completion.usage?.completionTokens || 0;
 
